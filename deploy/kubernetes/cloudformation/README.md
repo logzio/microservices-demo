@@ -59,6 +59,22 @@ kubectl get services -n sock-shop
 ```
 You can now visit the sock-shop using this address in a web browser
 
+## Deploy tracing shipping using the Logzio Collector
+
+Add your Tracing shipping token as a Kubernetes secret
+
+```
+kubectl create namespace jaeger
+kubectl create secret generic logzio-tracing-secret \
+  --from-literal=logzio-tracing-shipping-token='<<TRACING_SHIPPING_TOKEN>>' \
+  -n jaeger
+```
+
+Create the Jaeger deployment and update the sock-shop containers with the collector URL
+```
+kubectl apply -f deploy/kubernetes/manifests-jaeger
+```
+
 ## (Optional) Start and stop a load test
 
 Start the load test:
