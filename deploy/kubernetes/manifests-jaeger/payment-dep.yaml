@@ -30,7 +30,7 @@ spec:
         - containerPort: 80
         env:
         - name: ZIPKIN
-          value: http://zipkin.jaeger.svc.cluster.local:9411/api/v1/spans
+          value: http://jaeger-collector.jaeger.svc.cluster.local:9411/api/v1/spans
         securityContext:
           runAsNonRoot: true
           runAsUser: 10001
