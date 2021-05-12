@@ -46,6 +46,21 @@ Add your METRICS_SHIPPING_TOKEN to the remote write section in `deploy/kubernete
 cd microservices-demo
 kubectl apply -f deploy/kubernetes/manifests-monitoring
 ```
+## Deploy tracing shipping using the Logzio Collector
+
+Add your Tracing shipping token as a Kubernetes secret
+
+```
+kubectl create namespace jaeger
+kubectl create secret generic logzio-tracing-secret \
+  --from-literal=logzio-tracing-shipping-token='<<TRACING_SHIPPING_TOKEN>>' \
+  -n jaeger
+```
+
+Create the Jaeger deployment
+```
+kubectl apply -f deploy/kubernetes/manifests-jaeger
+```
 
 ## Deploy the sock-shop app stack
 
@@ -58,22 +73,6 @@ Wait approximately 5 minutess for DNS propagation to happen and then get the app
 kubectl get services -n sock-shop
 ```
 You can now visit the sock-shop using this address in a web browser
-
-## Deploy tracing shipping using the Logzio Collector
-
-Add your Tracing shipping token as a Kubernetes secret
-
-```
-kubectl create namespace jaeger
-kubectl create secret generic logzio-tracing-secret \
-  --from-literal=logzio-tracing-shipping-token='<<TRACING_SHIPPING_TOKEN>>' \
-  -n jaeger
-```
-
-Create the Jaeger deployment and update the sock-shop containers with the collector URL
-```
-kubectl apply -f deploy/kubernetes/manifests-jaeger
-```
 
 ## (Optional) Start and stop a load test
 
