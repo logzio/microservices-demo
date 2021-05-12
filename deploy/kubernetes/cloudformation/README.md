@@ -90,6 +90,7 @@ kubectl delete -f deploy/kubernetes/manifests-loadtest
 
 ```
 kubectl delete namespace sock-shop
+kubectl delete namespace jaeger
 kubectl delete namespace monitoring
 ```
 
