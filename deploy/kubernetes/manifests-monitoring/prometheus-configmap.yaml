@@ -22,7 +22,7 @@ data:
           max_shards: 10 
           min_shards: 1
           max_samples_per_send: 500 
-          capacity: 10000 
+          capacity: 10000
     scrape_configs:
       - job_name: kubernetes-service-endpoints
         kubernetes_sd_configs:
@@ -76,20 +76,6 @@ data:
               - __meta_kubernetes_service_name
             separator: /
             target_label: job
-      - job_name: 'kubernetes-apiservers'
-
-        kubernetes_sd_configs:
-        - role: endpoints
-        scheme: https
-
-        tls_config:
-          ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-        bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
-
-        relabel_configs:
-        - source_labels: [__meta_kubernetes_namespace, __meta_kubernetes_service_name, __meta_kubernetes_endpoint_port_name]
-          action: keep
-          regex: default;kubernetes;https
       - job_name: kubernetes-pods
         kubernetes_sd_configs:
           - role: pod
@@ -126,10 +112,6 @@ data:
           regex: (.+)
           target_label: __metrics_path__
           replacement: /api/v1/nodes/${1}/proxy/metrics     
-      - job_name: 'kube-state-metrics'
-        static_configs:
-          - targets: ['kube-state-metrics.monitoring.svc.cluster.local:8080']
-      
       - job_name: 'kubernetes-cadvisor'
 
         scheme: https
@@ -150,10 +132,3 @@ data:
           regex: (.+)
           target_label: __metrics_path__
           replacement: /api/v1/nodes/${1}/proxy/metrics/cadvisor
-      - job_name: 'node-exporter'
-        kubernetes_sd_configs:
-          - role: endpoints
-        relabel_configs:
-        - source_labels: [__meta_kubernetes_endpoints_name]
-          regex: 'node-exporter'
-          action: keep
