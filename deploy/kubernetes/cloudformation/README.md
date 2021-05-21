@@ -46,20 +46,15 @@ Add your METRICS_SHIPPING_TOKEN to the remote write section in `deploy/kubernete
 cd microservices-demo
 kubectl apply -f deploy/kubernetes/manifests-monitoring
 ```
-## Deploy tracing shipping using the Logzio Collector
+## Deploy tracing shipping using the OpenTelemetry Collector
 
-Add your Tracing shipping token as a Kubernetes secret
+Add your TRACING_SHIPPING_TOKEN to the exporters section in `deploy/kubernetes/manifests-tracing/otel-collector.yaml` and optionally update your region if you are using a different region than the default
+
+**NOTE:**  We need to do this as otel-collector.yaml can't read environment variables.  Long term we need a better solution to avoid people sharing their shipping token in this repository
 
 ```
-kubectl create namespace jaeger
-kubectl create secret generic logzio-tracing-secret \
-  --from-literal=logzio-tracing-shipping-token='<<TRACING_SHIPPING_TOKEN>>' \
-  -n jaeger
-```
-
-Create the Jaeger deployment
-```
-kubectl apply -f deploy/kubernetes/manifests-jaeger
+cd microservices-demo
+kubectl apply -f deploy/kubernetes/manifests-tracing
 ```
 
 ## Deploy the sock-shop app stack

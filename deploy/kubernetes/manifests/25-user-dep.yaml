@@ -21,7 +21,7 @@ spec:
         image: weaveworksdemos/user:0.4.7
         env:
          - name: ZIPKIN
-           value: http://jaeger-collector.jaeger.svc.cluster.local:9411/api/v1/spans
+           value: http://otel-collector.monitoring.svc.cluster.local:9411/api/v1/spans
         resources:
           limits:
             cpu: 300m
