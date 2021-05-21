@@ -20,12 +20,14 @@ spec:
     spec:
       containers:
       - name: rabbitmq
-        image: rabbitmq:3.6.8-management
+        image: rabbitmq:3.8.16-management
         ports:
         - containerPort: 15672
           name: management
         - containerPort: 5672
           name: rabbitmq
+        - containerPort: 15692
+          name: metrics
         securityContext:
           capabilities:
             drop:
@@ -35,11 +37,5 @@ spec:
               - SETGID
               - SETUID
               - DAC_OVERRIDE
-          readOnlyRootFilesystem: true
-      - name: rabbitmq-exporter
-        image: kbudde/rabbitmq-exporter
-        ports:
-        - containerPort: 9090
-          name: exporter
       nodeSelector:
         beta.kubernetes.io/os: linux
