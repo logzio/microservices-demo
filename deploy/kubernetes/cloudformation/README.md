@@ -54,6 +54,8 @@ Use the `kubernetes-cluster-with-new-vpc.template.yaml` template in this directo
 4. `export KUBECONFIG=$(pwd)/kubeconfig`
 5. Verify the connection by running `kubectl get nodes`
 
+---
+
 ## Deploy the Logz.io fluentd daemonset
 
 Follow the instructions, using the __RBAC__ option: https://app.logz.io/#/dashboard/send-your-data/log-sources/kubernetes?type=default-config
@@ -83,6 +85,7 @@ Add your TRACING_SHIPPING_TOKEN to the exporters section in `deploy/kubernetes/m
 cd microservices-demo
 kubectl apply -f deploy/kubernetes/manifests-tracing
 ```
+---
 
 ## Deploy the sock-shop app stack
 
