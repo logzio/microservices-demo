@@ -1,6 +1,33 @@
 # Deploying sock-shop to a Kubernetes cluster in AWS
 
-## Create a new Kubernetes cluster in AWS
+## Option 1 - Create a new Kubernetes cluster via the EKS CLI
+
+### Prerequisites
+
+1. `kubectl` and `eksctl` set up on your system - see the _Prerequisites_ section in the [Getting started with Amazon EKS](https://docs.aws.amazon.com/eks/latest/userguide/getting-started-eksctl.html) guide
+2. An SSH keypair set up for the AWS reqion you wish to create the EKS stack in - see [Creating or importing a keypair](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html#prepare-key-pair)
+
+### Create the cluster
+
+In a terminal on your local machine, run the following command:
+
+```bash
+eksctl create cluster --name <cluster-name> --region <aws-region> --with-oidc --ssh-access --ssh-public-key <ssh-key-name> --managed --zones <zone-list> --node-type t3.medium
+```
+
+- `<cluster-name>` is the name you wish to identify your cluster with
+- `<aws-region>` is the name of a valid [AWS Region](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html#concepts-regions)
+- `<ssh-key-name>` is the name of a valid SSH key in the `<aws-region>`
+- `<zone-list>` is a comma-separated list of two [Availability Zones](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html#availability-zones-describe) in the `<aws-region>` e.g. `us-east-1a,us-east-1b`
+  
+For example:
+```bash 
+eksctl create cluster --name sf-demo --region us-east-1 --with-oidc --ssh-access --ssh-public-key simon.fisher --managed --zones us-east-1a,us-east-1b --node-type t3.medium
+```
+
+Once the cluster is created, verify the connection by running `kubectl get nodes`
+
+## Option 2 - Create a new Kubernetes cluster in AWS via Console
 
 Use the `kubernetes-cluster-with-new-vpc.template.yaml` template in this directory to spin up a 3-node Kubernetes cluster in AWS.  This template is taken from the VMWare Kubernetes Quickstart (https://aws.amazon.com/quickstart/architecture/vmware-kubernetes/)
 
@@ -17,7 +44,7 @@ Use the `kubernetes-cluster-with-new-vpc.template.yaml` template in this directo
 8. Tick the boxes in the _Capabilities_ section and finally click the **Create Stack** button.
 9. Once the creation is complete, note the contents of the **Outputs** tab - you will need some of these in the following sections.
 
-## Connect to and test the running cluster:
+### Connect to and test the running cluster:
 
 1. On your local machine switch to your home directory `cd ~`
 2. Export the path to the private key file for the keypair you used in the stack creation:
