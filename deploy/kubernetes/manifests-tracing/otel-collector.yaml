@@ -1,168 +1,132 @@
+apiVersion:  apps/v1
+kind: Deployment
+metadata:
+  name: otel-collector-logzio
+  labels:
+    app: otel-logzio
+    app.kubernetes.io/name: otel-logzio
+    app.kubernetes.io/component: collector
+  namespace: monitoring
+spec:
+  selector:
+    matchLabels:
+      app: otel-logzio
+      app.kubernetes.io/name: otel-logzio
+      app.kubernetes.io/component: collector
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: otel-logzio
+        app.kubernetes.io/name: otel-logzio
+        app.kubernetes.io/component: collector
+    spec:
+      containers:
+      - image: otel/opentelemetry-collector-contrib:0.22.0
+        name: otel-collector-logzio
+        ports:
+        - containerPort: 1888   # pprof extension
+          protocol: TCP
+        - containerPort: 9411  # Zipkin receiver
+          protocol: TCP
+        - containerPort: 8888  # Prometheus metrics exposed by the collector
+          protocol: TCP
+        - containerPort: 13133  # health_check extension
+          protocol: TCP
+        - containerPort: 14250 #jaeger receiver
+          protocol: TCP
+        env:
+          - name: LOGZIO_TRACES_TOKEN
+            valueFrom:
+              secretKeyRef:
+                key: logzio-tracing-shipping-token # This is the secret you created in step 4 above. 
+                name: logzio-tracing-secret
+        volumeMounts:
+        - name: otel-collector-config
+          mountPath: "/etc/otel/"
+          readOnly: true
+          # subPath: config.yml
+      volumes:
+      - name: otel-collector-config
+        configMap:
+          defaultMode: 0600
+          name: otel-collector-config
+
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: otel-collector-config
-  namespace: monitoring
+ name: otel-collector-config
+ namespace: monitoring
+ labels:
+   app: otel-logzio
+   component: otel-collector-conf
 data:
-  config.yaml: |-
-    receivers:
-      zipkin:
-        endpoint:
-        
-    processors:
-      batch:    
+ config.yaml: |
+  receivers:
+    opencensus:
+    zipkin:
+      endpoint: :9411
+    jaeger:
+      protocols:
+        thrift_http:
+        grpc:
 
+  exporters:
+    logzio:
+      account_token: "${LOGZIO_TRACES_TOKEN}"
+      region: "us"    # Replace with the 2-letter code for your region from the Logz.io Regions and Listener hosts table or from your Account settings page - as in step 3 above. 
+    logging:
 
-    exporters:
-      logzio:
-        account_token: "TRACING_SHIPPING_TOKEN"
-        region: "us"
+  processors:
+    batch:
 
-    service:
-      pipelines:
-        traces:
-          receivers: [zipkin]
-          processors: [batch]
-          exporters: [logzio]
+  extensions:
+    pprof:
+      endpoint: :1777
+    zpages:
+      endpoint: :55679
+    health_check:
 
-
----
-apiVersion: apps/v1
-kind: DaemonSet
-metadata:
-  name: otel-collector
-  namespace: monitoring
-  labels:
-    app: opentelemetry
-    component: otel-collector
-spec:
-  selector:
-    matchLabels:
-      app: opentelemetry
-      component: otel-collector
-  template:
-    metadata:
-      labels:
-        app: opentelemetry
-        component: otel-collector
-    spec:
-      containers:
-      - name: otel-collector
-        image: otel/opentelemetry-collector-contrib:0.22.0
-        resources:
-          limits:
-            cpu: 100m
-            memory: 200Mi
-          requests:
-            cpu: 100m
-            memory: 200Mi
-        volumeMounts:
-        - mountPath: /var/log
-          name: varlog
-          readOnly: true
-        - mountPath: /var/lib/docker/containers
-          name: varlibdockercontainers
-          readOnly: true
-        - mountPath: /etc/otel/config.yaml
-          name: data
-          subPath: config.yaml
-          readOnly: true
-      terminationGracePeriodSeconds: 30
-      volumes:
-      - name: varlog
-        hostPath:
-          path: /var/log
-      - name: varlibdockercontainers
-        hostPath:
-          path: /var/lib/docker/containers
-      - name: data
-        configMap:
-          name: otel-collector-config
-
+  service:
+    extensions: [health_check, pprof]
+    pipelines:
+      traces:
+        receivers: [opencensus, jaeger, zipkin]
+        processors: [batch]
+        exporters: [logzio]
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: otel-collector
+  labels:
+    app: otel-logzio
+    app.kubernetes.io/name: otel-logzio
+    app.kubernetes.io/component: collector
   namespace: monitoring
-  labels:
-    app: opentelemetry
-    component: otel-collector
 spec:
-  type: LoadBalancer
   ports:
-  - name: metrics # Default endpoint for querying metrics.
-    port: 8888
-  - name: zipkin # Default endpoint for Zipkin trace receiver.
+  - name: jaeger-health-check
+    port: 14269
+    protocol: TCP
+    targetPort: 14269
+  - name: jaeger-collector-http
+    port: 14268
+    protocol: TCP
+    targetPort: 14268
+  - name: jaeger-collector-zipkin
     port: 9411
-  - name: jaeger
+    protocol: TCP
+    targetPort: 9411
+  - name: jaeger-collector-grpc
     port: 14250
+    protocol: TCP
+    targetPort: 14250
   selector:
-    component: otel-collector
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: otel-collector
-  labels:
-    app: opentelemetry
-    component: otel-collector
-spec:
-  selector:
-    matchLabels:
-      app: opentelemetry
-      component: otel-collector
-  minReadySeconds: 5
-  progressDeadlineSeconds: 120
-  replicas: 1 #TODO - adjust this to your own requirements
-  template:
-    metadata:
-      labels:
-        app: opentelemetry
-        component: otel-collector
-    spec:
-      containers:
-      - command:
-          - "/otelcontribcol"
-          - "--config=/conf/otel-collector-config.yaml"
-#           Memory Ballast size should be max 1/3 to 1/2 of memory.
-          - "--mem-ballast-size-mib=683"
-        image: otel/opentelemetry-collector-contrib:0.27.0
-        name: otel-collector
-        resources:
-          limits:
-            cpu: 1
-            memory: 2Gi
-          requests:
-            cpu: 200m
-            memory: 400Mi
-        ports:
-        - containerPort: 55679 # Default endpoint for ZPages.
-        - containerPort: 55680 # Default endpoint for OpenTelemetry receiver.
-        - containerPort: 6060  # Default endpoint for HTTP Forwarder extension.
-        - containerPort: 7276  # Default endpoint for SignalFx APM receiver.
-        - containerPort: 8888  # Default endpoint for querying metrics.
-        - containerPort: 9411  # Default endpoint for Zipkin trace receiver.
-        - containerPort: 9943  # Default endpoint for SignalFx metrics receiver.
-        - containerPort: 14250
-        volumeMounts:
-        - name: otel-collector-config-vol
-          mountPath: /conf
-#        - name: otel-collector-secrets
-#          mountPath: /secrets
-        livenessProbe:
-          httpGet:
-            path: /
-            port: 13133 # Health Check extension default port.
-        readinessProbe:
-          httpGet:
-            path: /
-            port: 13133 # Health Check extension default port.
-      volumes:
-        - configMap:
-            name: otel-collector-conf
-            items:
-              - key: otel-collector-config
-                path: otel-collector-config.yaml
-          name: otel-collector-config-vol
+    app: otel-logzio
+    app.kubernetes.io/name: otel-logzio
+    app.kubernetes.io/component: collector
+  type: ClusterIP
