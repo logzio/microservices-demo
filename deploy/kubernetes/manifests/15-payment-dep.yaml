@@ -21,6 +21,7 @@ spec:
       containers:
       - name: payment
         image: weaveworksdemos/payment:0.4.3
+        imagePullPolicy: always
         env:
          - name: ZIPKIN
            value: http://otel-collector.monitoring.svc.cluster.local:9411/api/v1/spans
