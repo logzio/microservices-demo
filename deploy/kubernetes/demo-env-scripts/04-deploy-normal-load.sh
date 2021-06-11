@@ -2,4 +2,4 @@
 
 echo "Scaling down load"
 
-kubectl apply -f ../manifests-loadtest/loadtest-dep.yaml
+kubectl apply -f ~/kubernetes/manifests-loadtest/loadtest-dep.yaml

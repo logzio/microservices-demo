@@ -31,6 +31,9 @@ echo "Deploying OpenTelemetry tracing"
 kubectl --namespace=monitoring create secret generic logzio-tracing-secret \
   --from-literal=logzio-tracing-shipping-token=$tracing_token 
 
+kubectl --namespace=monitoring create secret generic logzio-metrics-secret \
+  --from-literal=logzio-metrics-shipping-token=$metrics_token 
+
 kubectl apply -f ../manifests-tracing
 
 echo "Deploying Sock Shop"
