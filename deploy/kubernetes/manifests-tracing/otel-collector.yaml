@@ -29,6 +29,8 @@ spec:
         ports:
         - containerPort: 1888   # pprof extension
           protocol: TCP
+        - containerPort: 4317 # Otel port
+          protocol: TCP
         - containerPort: 9411  # Zipkin receiver
           protocol: TCP
         - containerPort: 8888  # Prometheus metrics exposed by the collector
@@ -75,6 +77,10 @@ data:
       protocols:
         grpc:
           endpoint: :12345
+    otlp:
+      protocols:
+        grpc:
+          endpoint: :4317
     opencensus:
     zipkin:
       endpoint: :9411
@@ -137,7 +143,7 @@ data:
     extensions: [health_check, pprof]
     pipelines:
       traces:
-        receivers: [opencensus, jaeger, zipkin]
+        receivers: [otlp, opencensus, jaeger, zipkin]
         processors: [spanmetrics,batch]
         exporters: [logzio]
       metrics/spanmetrics:
@@ -146,7 +152,7 @@ data:
         receivers: [otlp/spanmetrics]
         exporters: [prometheus]
       metrics:
-        receivers: [prometheus]
+        receivers: [otlp,prometheus]
         exporters: [logging,prometheusremotewrite]
 ---
 apiVersion: v1
@@ -160,6 +166,10 @@ metadata:
   namespace: monitoring
 spec:
   ports:
+  - name: otel-collector-grpc
+    protocol: TCP
+    port: 4317
+    targetPort: 4317
   - name: jaeger-health-check
     port: 14269
     protocol: TCP

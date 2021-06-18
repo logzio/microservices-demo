@@ -20,10 +20,12 @@ spec:
       - name: orders
         image: weaveworksdemos/orders:0.4.7
         env:
-         - name: ZIPKIN
-           value: otel-collector.monitoring.svc.cluster.local
-         - name: JAVA_OPTS
-           value: -Xms64m -Xmx128m -XX:PermSize=32m -XX:MaxPermSize=64m -XX:+UseG1GC -Djava.security.egd=file:/dev/urandom
+          - name: OTEL_RESOURCE_ATTRIBUTES
+            value: service.name = orders
+          - name: JAVA_OPTS
+            value: -Xms64m -Xmx128m -XX:PermSize=32m -XX:MaxPermSize=64m -XX:+UseG1GC -Djava.security.egd=file:/dev/urandom -Dspring.sleuth.enabled=false -javaagent:/tmp/opentelemetry-javaagent-all.jar
+          - name: OTEL_EXPORTER_OTLP_ENDPOINT
+            value: http://otel-collector.monitoring.svc.cluster.local:4317
         resources:
           limits:
             cpu: 500m
@@ -57,6 +59,18 @@ spec:
             port: 80
           initialDelaySeconds: 180
           periodSeconds: 3
+      initContainers:
+      - command:
+        - install
+        - -m
+        - '644'
+        - /opt/otel/opentelemetry-javaagent-all.jar
+        - /tmp
+        name: otel-javaagent
+        image: 850759972217.dkr.ecr.us-east-1.amazonaws.com/otel-javaagent:latest
+        volumeMounts:
+        - mountPath: /tmp
+          name: tmp-volume
       volumes:
         - name: tmp-volume
           emptyDir:
