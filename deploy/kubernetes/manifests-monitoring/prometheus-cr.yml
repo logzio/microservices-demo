@@ -13,10 +13,17 @@ rules:
   - services
   - endpoints
   - pods
+  - deployments
   verbs:
   - get
   - list
   - watch
+- apiGroups: ["extensions", "apps"]
+  #
+  # at the HTTP level, the name of the resource for accessing Deployment
+  # objects is "deployments"
+  resources: ["deployments"]
+  verbs: ["get", "list", "watch"]
 - nonResourceURLs:
   - /metrics
   verbs:
