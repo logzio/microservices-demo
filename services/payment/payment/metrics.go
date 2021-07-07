@@ -13,14 +13,14 @@ type InstrumentingMiddleware struct {
 	next           Service
 }
 
-func (mw InstrumentingMiddleware) Authorise(amount float32) (auth Authorisation, err error) {
+func (mw InstrumentingMiddleware) Authorise(amount float32, traceID string) (auth Authorisation, err error) {
 	defer func(begin time.Time) {
 		lvs := []string{"route", "paymentAuth","method", "POST", "error", fmt.Sprint(err != nil), "isWS", "false", "status_code", "200"}
 		mw.requestCount.With(lvs...).Add(1)
 		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
 
-	return mw.next.Authorise(amount)
+	return mw.next.Authorise(amount, traceID)
 }
 
 func (mw InstrumentingMiddleware) Health() (health []Health) {

@@ -9,7 +9,7 @@ import (
 // Middlewaecase corates a service.
 type Middleware func(Service) Service
 type Service interface {
-    Authorise(total float32) (Authorisation, error) // GET /paymentAuth
+    Authorise(total float32, traceID string) (Authorisation, error) // GET /paymentAuth
     Health() []Health                               // GET /health
 }
 type Authorisation struct {
@@ -32,9 +32,11 @@ func NewAuthorisationService(declineOverAmount float32) Service {
 type service struct {
     declineOverAmount float32
 }
-func (s *service) Authorise(amount float32) (Authorisation, error) {
+func (s *service) Authorise(amount float32, traceID string) (Authorisation, error) {
     // Insert random 1-10 second delay then buffer overflow
     rand.Seed(time.Now().UnixNano())
+
+    // Uncomment the below two lines to make the service fail
     time.Sleep(time.Duration(rand.Intn(10))*time.Second)
 
     return Authorisation{}, ErrGatewayUnavailable

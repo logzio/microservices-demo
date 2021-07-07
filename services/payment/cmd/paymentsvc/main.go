@@ -19,13 +19,13 @@ import (
 
 	semconv "go.opentelemetry.io/otel/semconv/v1.4.0"
 
+	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"
 	"go.opentelemetry.io/otel/exporters/stdout/stdouttrace"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/sdk/resource"
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
-	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 )
 
 const (
@@ -45,7 +45,7 @@ func main() {
 	ctx := context.Background()
 	{
 		logger = log.NewLogfmtLogger(os.Stderr)
-		logger = log.With(logger, "ts", log.DefaultTimestampUTC, "caller", log.DefaultCaller)
+		logger = log.With(logger, "ts", log.DefaultTimestampUTC, "caller")
 	}
 
 	//var bsp sdktrace.SpanProcessor
