@@ -9,7 +9,7 @@ done
 
 echo "Deploying version 0.4.3 of payments service"
 
-kubectl set image deployment/payment payment=weaveworksdemos/payment:0.4.3 --record -n sock-shop
+kubectl set image deployment/payment payment=850759972217.dkr.ecr.us-east-1.amazonaws.com/payment:0.4.3 --record -n sock-shop
 
 echo "Notifying Logz.io of deployment"
 

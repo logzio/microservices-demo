@@ -20,11 +20,11 @@ spec:
     spec:
       containers:
       - name: payment
-        image: weaveworksdemos/payment:0.4.3
+        image: 850759972217.dkr.ecr.us-east-1.amazonaws.com/payment:0.4.3
         imagePullPolicy: Always
         env:
-         - name: ZIPKIN
-           value: http://otel-collector.monitoring.svc.cluster.local:9411/api/v1/spans
+         - name: OTEL
+           value: otel-collector.monitoring.svc.cluster.local:4317
         resources:
           limits:
             cpu: 100m
@@ -47,13 +47,13 @@ spec:
           httpGet:
             path: /health
             port: 80
-          initialDelaySeconds: 300
+          initialDelaySeconds: 180
           periodSeconds: 3
         readinessProbe:
           httpGet:
             path: /health
             port: 80
-          initialDelaySeconds: 180
+          initialDelaySeconds: 60
           periodSeconds: 3
       nodeSelector:
         beta.kubernetes.io/os: linux
