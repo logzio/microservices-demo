@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: queue-master
-        image: weaveworksdemos/queue-master:0.3.1
+        image: weaveworksdemos/queue-master:master-b8bcfc79
         env:
           - name: OTEL_RESOURCE_ATTRIBUTES
             value: service.name = queue-master
