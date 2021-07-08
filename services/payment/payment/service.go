@@ -34,10 +34,10 @@ type service struct {
 }
 func (s *service) Authorise(amount float32, traceID string) (Authorisation, error) {
     // Insert random 1-10 second delay then buffer overflow
-    rand.Seed(time.Now().UnixNano())
+    //rand.Seed(time.Now().UnixNano())
 
     // Uncomment the below two lines to make the service fail
-    time.Sleep(time.Duration(rand.Intn(10))*time.Second)
+    //time.Sleep(time.Duration(rand.Intn(10))*time.Second)
 
     return Authorisation{}, ErrGatewayUnavailable
 

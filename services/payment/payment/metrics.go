@@ -15,7 +15,13 @@ type InstrumentingMiddleware struct {
 
 func (mw InstrumentingMiddleware) Authorise(amount float32, traceID string) (auth Authorisation, err error) {
 	defer func(begin time.Time) {
-		lvs := []string{"route", "paymentAuth","method", "POST", "error", fmt.Sprint(err != nil), "isWS", "false", "status_code", "200"}
+		statusCode := "200"
+		if (err == ErrGatewayUnavailable) {
+			statusCode = "502"
+		} else if (err == ErrInvalidPaymentAmount) {
+			statusCode = "400"
+		}
+		lvs := []string{"route", "paymentAuth","method", "POST", "error", fmt.Sprint(err != nil), "isWS", "false", "status_code", statusCode}
 		mw.requestCount.With(lvs...).Add(1)
 		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
