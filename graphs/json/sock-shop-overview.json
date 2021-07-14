@@ -335,7 +335,7 @@
         "steppedLine": false,
         "targets": [
           {
-            "expr": "sum(rate(request_duration_seconds_count{name=\"front-end\",status_code=~\"2..\",route!=\"/health\"}[1m])) * 100",
+            "expr": "sum(rate(http_request_duration_seconds_count{name=\"front-end\",status_code=~\"2..\",route!=\"/health\"}[1m])) * 100",
             "interval": "",
             "intervalFactor": 2,
             "legendFormat": "2xx",
@@ -343,7 +343,8 @@
             "step": 4
           },
           {
-            "expr": "sum(rate(request_duration_seconds_count{name=\"front-end\",status_code=~\"4.+|5.+\"}[1m])) * 100",
+            "expr": "sum(rate(http_request_duration_seconds_count{name=\"front-end\",status_code=~\"4.+|5.+\"}[1m])) * 100",
+            "interval": "",
             "intervalFactor": 2,
             "legendFormat": "4xx/5xx",
             "refId": "B",
@@ -436,21 +437,24 @@
         "steppedLine": false,
         "targets": [
           {
-            "expr": "histogram_quantile(0.99, sum(rate(request_duration_seconds_bucket{name=\"front-end\"}[1m])) by (name, le))",
+            "expr": "histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket{name=\"front-end\"}[1m])) by (name, le))",
+            "interval": "",
             "intervalFactor": 2,
             "legendFormat": "99th quantile",
             "refId": "A",
             "step": 2
           },
           {
-            "expr": "histogram_quantile(0.5, sum(rate(request_duration_seconds_bucket{name=\"front-end\"}[1m])) by (name, le))",
+            "expr": "histogram_quantile(0.5, sum(rate(http_request_duration_seconds_bucket{name=\"front-end\"}[1m])) by (name, le))",
+            "interval": "",
             "intervalFactor": 2,
             "legendFormat": "50th quantile",
             "refId": "B",
             "step": 2
           },
           {
-            "expr": "sum(rate(request_duration_seconds_sum{name=\"front-end\"}[1m])) / sum(rate(request_duration_seconds_count{name=\"front-end\"}[1m]))",
+            "expr": "sum(rate(http_request_duration_seconds_sum{name=\"front-end\"}[1m])) / sum(rate(http_request_duration_seconds_count{name=\"front-end\"}[1m]))",
+            "interval": "",
             "intervalFactor": 2,
             "legendFormat": "Mean",
             "refId": "C",
@@ -556,7 +560,7 @@
         "steppedLine": false,
         "targets": [
           {
-            "expr": "sum(rate(request_duration_seconds_count{name=\"front-end\", route=\"/catalogue\",status_code=~\"2..\"}[1m])) * 100",
+            "expr": "sum(rate(http_request_duration_seconds_count{name=\"front-end\", path=\"catalogue\",status_code=~\"2..\"}[1m])) * 100",
             "interval": "",
             "intervalFactor": 2,
             "legendFormat": "2xx",
@@ -564,7 +568,7 @@
             "step": 4
           },
           {
-            "expr": "sum(rate(request_duration_seconds_count{name=\"front-end\", route=\"/catalogue\",status_code=~\"4.+|5.+\"}[1m])) * 100",
+            "expr": "sum(rate(http_rrequest_duration_seconds_count{name=\"front-end\", path=\"catalogue\",status_code=~\"4.+|5.+\"}[1m])) * 100",
             "interval": "",
             "intervalFactor": 2,
             "legendFormat": "4xx/5xx",
@@ -658,7 +662,7 @@
         "steppedLine": false,
         "targets": [
           {
-            "expr": "histogram_quantile(0.99, sum(rate(request_duration_seconds_bucket{name=\"front-end\", route=\"/catalogue\"}[1m])) by (name, le))",
+            "expr": "histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket{name=\"front-end\", path=\"catalogue\"}[1m])) by (name, le))",
             "interval": "",
             "intervalFactor": 2,
             "legendFormat": "99th quantile",
@@ -666,7 +670,7 @@
             "step": 2
           },
           {
-            "expr": "histogram_quantile(0.5, sum(rate(request_duration_seconds_bucket{name=\"front-end\", route=\"/catalogue\"}[1m])) by (name, le))",
+            "expr": "histogram_quantile(0.5, sum(rate(http_request_duration_seconds_bucket{name=\"front-end\", path=\"catalogue\"}[1m])) by (name, le))",
             "interval": "",
             "intervalFactor": 2,
             "legendFormat": "50th quantile",
@@ -674,7 +678,7 @@
             "step": 2
           },
           {
-            "expr": "sum(rate(request_duration_seconds_sum{name=\"front-end\", route=\"/catalogue\"}[1m])) / sum(rate(request_duration_seconds_count{name=\"front-end\", route=\"/catalogue\"}[1m]))",
+            "expr": "sum(rate(http_request_duration_seconds_sum{name=\"front-end\", path=\"catalogue\"}[1m])) / sum(rate(http_request_duration_seconds_count{name=\"front-end\", path=\"catalogue\"}[1m]))",
             "interval": "",
             "intervalFactor": 2,
             "legendFormat": "Mean",
@@ -767,7 +771,7 @@
         "steppedLine": false,
         "targets": [
           {
-            "expr": "sum(rate(request_duration_seconds_count{name=\"front-end\", route=\"/cart\",status_code=~\"2..\"}[1m])) * 100",
+            "expr": "sum(rate(http_request_duration_seconds_count{name=\"front-end\", path=\"cart\",status_code=~\"2..\"}[1m])) * 100",
             "interval": "",
             "intervalFactor": 2,
             "legendFormat": "2xx",
@@ -775,7 +779,7 @@
             "step": 4
           },
           {
-            "expr": "sum(rate(request_duration_seconds_count{name=\"front-end\", route=\"/cart\",status_code=~\"4.+|5.+\"}[1m])) * 100",
+            "expr": "sum(rate(http_request_duration_seconds_count{name=\"front-end\", path=\"cart\",status_code=~\"4.+|5.+\"}[1m])) * 100",
             "interval": "",
             "intervalFactor": 2,
             "legendFormat": "4xx/5xx",
@@ -986,7 +990,7 @@
         "steppedLine": false,
         "targets": [
           {
-            "expr": "sum(rate(request_duration_seconds_count{name=\"front-end\",route=\"/orders\",status_code=~\"2..\"}[1m])) * 100",
+            "expr": "sum(rate(http_request_duration_seconds_count{name=\"front-end\",path=\"orders\",status_code=~\"2..\"}[1m])) * 100",
             "interval": "",
             "intervalFactor": 2,
             "legendFormat": "2xx",
@@ -994,7 +998,7 @@
             "step": 4
           },
           {
-            "expr": "sum(rate(request_duration_seconds_count{name=\"front-end\",route=\"/orders\",status_code=~\"4.+|5.+\"}[1m])) * 100",
+            "expr": "sum(rate(http_request_duration_seconds_count{name=\"front-end\",path=\"orders\",status_code=~\"4.+|5.+\"}[1m])) * 100",
             "interval": "",
             "intervalFactor": 2,
             "legendFormat": "4xx/5xx",
@@ -1088,7 +1092,7 @@
         "steppedLine": false,
         "targets": [
           {
-            "expr": "histogram_quantile(0.99, sum(rate(request_duration_seconds_bucket{name=\"front-end\", route=\"/orders\"}[1m])) by (name, le))",
+            "expr": "histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket{name=\"front-end\", path=\"orders\"}[1m])) by (name, le))",
             "interval": "",
             "intervalFactor": 2,
             "legendFormat": "99th quantile",
@@ -1096,7 +1100,7 @@
             "step": 2
           },
           {
-            "expr": "histogram_quantile(0.5, sum(rate(request_duration_seconds_bucket{name=\"front-end\", route=\"/orders\"}[1m])) by (name, le))",
+            "expr": "histogram_quantile(0.5, sum(rate(http_request_duration_seconds_bucket{name=\"front-end\", path=\"orders\"}[1m])) by (name, le))",
             "interval": "",
             "intervalFactor": 2,
             "legendFormat": "50th quantile",
@@ -1104,7 +1108,7 @@
             "step": 2
           },
           {
-            "expr": "sum(rate(request_duration_seconds_sum{name=\"front-end\", route=\"/orders\"}[1m])) / sum(rate(request_duration_seconds_count{name=\"front-end\", route=\"/orders\"}[1m]))",
+            "expr": "sum(rate(http_request_duration_seconds_sum{name=\"front-end\", path=\"orders\"}[1m])) / sum(rate(http_request_duration_seconds_count{name=\"front-end\", path=\"orders\"}[1m]))",
             "interval": "",
             "intervalFactor": 2,
             "legendFormat": "Mean",
@@ -1788,7 +1792,7 @@
       "list": []
     },
     "time": {
-      "from": "now-30m",
+      "from": "now-6h",
       "to": "now"
     },
     "timepicker": {
@@ -1819,5 +1823,5 @@
     "timezone": "browser",
     "title": "Sock-Shop Overview",
     "uid": "a2ISz2eGz",
-    "version": 41
+    "version": 43
   }
