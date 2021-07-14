@@ -16,7 +16,8 @@ spec:
     spec:
       containers:
       - name: front-end
-        image: weaveworksdemos/front-end:0.3.12
+        image: 850759972217.dkr.ecr.us-east-1.amazonaws.com/front-end:0.3.12
+        imagePullPolicy: Always
         resources:
           limits:
             cpu: 300m
@@ -29,6 +30,8 @@ spec:
         env:
         - name: SESSION_REDIS
           value: "true"
+        - name: OTEL_EXPORTER_OTLP_ENDPOINT
+          value: http://otel-collector.monitoring.svc.cluster.local:4317
         securityContext:
           runAsNonRoot: true
           runAsUser: 10001
