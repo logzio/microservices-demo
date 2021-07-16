@@ -1,4 +1,3 @@
-00 00 * * * ~/kubernetes/demo-env-scripts/05-stop-traffic.sh
 00 02 * * * ~/kubernetes/demo-env-scripts/04-deploy-normal-load.sh
 30 02 * * * ~/kubernetes/demo-env-scripts/01-deploy-broken-payments.sh -a <API-TOKEN>
 00 03 * * * ~/kubernetes/demo-env-scripts/02-deploy-working-payments.sh -a <API-TOKEN>
