@@ -1,0 +1,9 @@
+00 02 * * * ~/microservices-demo/deploy/kubernetes/demo-env-scripts/04-deploy-normal-load.sh
+30 02 * * * ~/microservices-demo/deploy/kubernetes/demo-env-scripts/01-deploy-broken-payments.sh -a <API-TOKEN>
+00 03 * * * ~/microservices-demo/deploy/kubernetes/demo-env-scripts/02-deploy-working-payments.sh -a <API-TOKEN>
+15 03 * * * ~/microservices-demo/deploy/kubernetes/demo-env-scripts/03-deploy-high-load.sh
+00 04 * * * ~/microservices-demo/deploy/kubernetes/demo-env-scripts/04-deploy-normal-load.sh
+30 10 * * * ~/microservices-demo/deploy/kubernetes/demo-env-scripts/01-deploy-broken-payments.sh -a <API-TOKEN>
+00 11 * * * ~/microservices-demo/deploy/kubernetes/demo-env-scripts/02-deploy-working-payments.sh -a <API-TOKEN>
+15 11 * * * ~/microservices-demo/deploy/kubernetes/demo-env-scripts/03-deploy-high-load.sh
+00 12 * * * ~/microservices-demo/deploy/kubernetes/demo-env-scripts/04-deploy-normal-load.sh
