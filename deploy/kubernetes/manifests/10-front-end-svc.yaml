@@ -6,6 +6,11 @@ metadata:
   labels:
     name: front-end
   namespace: sock-shop
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
+    service.beta.kubernetes.io/aws-load-balancer-access-log-enabled: "true"
+    service.beta.kubernetes.io/aws-load-balancer-access-log-emit-interval: "5"
+    service.beta.kubernetes.io/aws-load-balancer-access-log-s3-bucket-name: "sock-shop-elb-dev"
 spec:
   type: LoadBalancer
   ports:
