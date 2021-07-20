@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: loadtest-configmap
+  namespace: loadtest
+data:
+  TARGET_HOST: http://front-end.sock-shop.svc.cluster.local
+  CLIENTS: "2"
+  HATCH_RATE: "2"
+  NUM_REQUEST: "8"
+

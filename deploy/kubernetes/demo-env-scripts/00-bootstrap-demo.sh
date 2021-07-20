@@ -22,7 +22,7 @@ kubectl apply -f https://raw.githubusercontent.com/logzio/logzio-k8s/master/logz
 
 echo "Deploying Prometheus monitoring"
 
-gsed -i "s/METRICS_SHIPPING_TOKEN/$metrics_token/g" ../manifests-monitoring/prometheus-configmap.yaml
+sed -i "s/METRICS_SHIPPING_TOKEN/$metrics_token/g" ../manifests-monitoring/prometheus-configmap.yaml
 
 kubectl apply -f ../manifests-monitoring
 
