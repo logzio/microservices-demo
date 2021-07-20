@@ -12,7 +12,7 @@ metadata:
     name: load-test
   namespace: loadtest
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       name: load-test
@@ -24,7 +24,10 @@ spec:
       containers:
       - name: load-test
         image: weaveworksdemos/load-test:0.1.1
+        envFrom:
+        - configMapRef:
+            name: loadtest-configmap
         command: ["/bin/sh"]
-        args: ["-c", "while true; do locust --host http://afe78853bc76c4299a177a96b0792e45-82359633.us-east-1.elb.amazonaws.com -f /config/locustfile.py --clients 4 --hatch-rate 5 --num-request 8 --no-web; done"]
+        args: ["-c", "while true; do locust --host $TARGET_HOST -f /config/locustfile.py --clients $CLIENTS --hatch-rate $HATCH_RATE --num-request $NUM_REQUEST --no-web; done"]
       nodeSelector:
         beta.kubernetes.io/os: linux
