@@ -23,8 +23,9 @@ spec:
         app.kubernetes.io/name: otel-logzio
         app.kubernetes.io/component: collector
     spec:
+      serviceAccount: prometheus
       containers:
-      - image: otel/opentelemetry-collector-contrib:0.21.0
+      - image: otel/opentelemetry-collector-contrib:0.33.0
         name: otel-collector-logzio
         ports:
         - containerPort: 1888   # pprof extension
@@ -52,13 +53,12 @@ spec:
                 name: logzio-metrics-secret
         volumeMounts:
         - name: otel-collector-config
-          mountPath: "/etc/otel/"
+          mountPath: "/etc/otel/config.yaml"
           readOnly: true
-          # subPath: config.yml
+          subPath: config.yaml
       volumes:
       - name: otel-collector-config
         configMap:
-          defaultMode: 0600
           name: otel-collector-config
 
 ---
@@ -112,6 +112,10 @@ data:
     logging:
   processors:
     batch:
+    k8s_tagger:
+    probabilistic_sampler:
+      hash_seed: 22
+      sampling_percentage: 10
     spanmetrics:
       metrics_exporter: prometheus
       latency_histogram_buckets: [2ms, 6ms, 10ms, 100ms, 250ms, 500ms, 1000ms, 10000ms, 100000ms, 1000000ms]
@@ -144,7 +148,7 @@ data:
     pipelines:
       traces:
         receivers: [otlp, opencensus, jaeger, zipkin]
-        processors: [spanmetrics,batch]
+        processors: [spanmetrics,probabilistic_sampler,k8s_tagger,batch]
         exporters: [logzio]
       metrics/spanmetrics:
         # This receiver is just a dummy and never used.
