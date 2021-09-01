@@ -42,4 +42,4 @@ kubectl apply -f ../manifests
 
 echo "Starting normal traffic"
 
-kubectl apply -f ../manifests-loadtest/loadtest-dep.yaml
+kubectl apply -f ../manifests-loadtest/

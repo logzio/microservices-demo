@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: front-end
-        image: 850759972217.dkr.ecr.us-east-1.amazonaws.com/front-end:0.3.12
+        image: 218304769651.dkr.ecr.us-east-1.amazonaws.com/front-end:0.3.12
         imagePullPolicy: Always
         resources:
           limits:
