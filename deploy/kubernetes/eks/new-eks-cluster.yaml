@@ -4,7 +4,7 @@ availabilityZones:
 - us-east-1b
 cloudWatch:
   clusterLogging:
-    enableTypes: ["*"]
+    enableTypes: ["api","authenticator","controllerManager","scheduler"]
 iam:
   vpcResourceControllerPolicy: true
   withOIDC: true
