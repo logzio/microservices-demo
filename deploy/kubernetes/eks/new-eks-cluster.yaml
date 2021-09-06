@@ -31,9 +31,11 @@ managedNodeGroups:
   instanceSelector: {}
   instanceType: t3.medium
   labels:
-    alpha.eksctl.io/cluster-name: sock-shop-<env>
+    alpha.eksctl.io/cluster-name: sock-shop-<ENV>
+    alpha.eksctl.io/nodegroup-name: sock-shop-<ENV>-ng
   maxSize: 2
   minSize: 2
+  name: sock-shop-<ENV>-ng
   privateNetworking: false
   releaseVersion: ""
   securityGroups:
@@ -41,7 +43,7 @@ managedNodeGroups:
     withShared: null
   ssh:
     allow: true
-    publicKeyPath: <ssh-key-id>
+    publicKeyPath: simon.fisher
   tags:
     alpha.eksctl.io/nodegroup-type: managed
   volumeIOPS: 3000
@@ -49,7 +51,7 @@ managedNodeGroups:
   volumeThroughput: 125
   volumeType: gp3
 metadata:
-  name: sock-shop-<env>
+  name: sock-shop-<ENV>
   region: us-east-1
   version: "1.21"
 privateCluster:
