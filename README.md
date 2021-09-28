@@ -1,3 +1,11 @@
+# OpenTelemetry Sock Shop
+This is a modified fork of the upstream repository found here: https://github.com/microservices-demo/microservices-demo
+
+We have made the following changes:
+1. Added OpenTelemetry instrumentation which replaces the OpenTracing instrumentation which is now frozen as a project.
+2. Added logz.io configuration for Opentelemetry collector
+3. Added support for logz.io deployment markers (easily replaced by other similar capabilities)
+
 [![Build Status](https://travis-ci.org/microservices-demo/microservices-demo.svg?branch=master)](https://travis-ci.org/microservices-demo/microservices-demo)
 
 # Sock Shop : A Microservice Demo Application
