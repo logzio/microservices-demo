@@ -5,6 +5,7 @@ We have made the following changes:
 1. Added OpenTelemetry instrumentation which replaces the OpenTracing instrumentation which is now frozen as a project.
 2. Added logz.io configuration for Opentelemetry collector
 3. Added support for logz.io deployment markers (easily replaced by other similar capabilities)
+4. Implemented Prometheus remote write for metrics. This is currently going to logz.io, but would work with any remote write compatible system (Prometheus, Cortex, Thanos, AWS Managed Prometheus, and others).
 
 [![Build Status](https://travis-ci.org/microservices-demo/microservices-demo.svg?branch=master)](https://travis-ci.org/microservices-demo/microservices-demo)
 
