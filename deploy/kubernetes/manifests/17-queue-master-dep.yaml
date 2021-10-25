@@ -52,13 +52,12 @@ spec:
           periodSeconds: 3
       initContainers:
       - command:
-        - install
-        - -m
-        - '644'
-        - /opt/otel/opentelemetry-javaagent-all.jar
-        - /tmp
+        - wget
+        - "-O"
+        - /tmp/opentelemetry-javaagent-all.jar
+        - https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v1.5.3/opentelemetry-javaagent-all.jar
         name: otel-javaagent
-        image: 850759972217.dkr.ecr.us-east-1.amazonaws.com/otel-javaagent:latest
+        image: busybox
         volumeMounts:
         - mountPath: /tmp
           name: tmp-volume
