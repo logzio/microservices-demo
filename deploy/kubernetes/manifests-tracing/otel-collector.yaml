@@ -108,7 +108,6 @@ data:
         Authorization: Bearer ${LOGZIO_METRICS_TOKEN}
     prometheus:
       endpoint: "localhost:8889"
-      namespace: "atm"
     logging:
   processors:
     batch:
