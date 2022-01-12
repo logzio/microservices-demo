@@ -46,11 +46,11 @@ spec:
               secretKeyRef:
                 key: logzio-tracing-shipping-token # This is the secret you created in step 4 above. 
                 name: logzio-tracing-secret
-          - name: LOGZIO_METRICS_TOKEN
+          - name: LOGZIO_SPM_METRICS_TOKEN
             valueFrom:
               secretKeyRef:
-                key: logzio-metrics-shipping-token # This is the secret you created in step 4 above. 
-                name: logzio-metrics-secret
+                key: logzio-spm-metrics-shipping-token # This is the secret you created in step 4 above. 
+                name: logzio-spm-metrics-secret
         volumeMounts:
         - name: otel-collector-config
           mountPath: "/etc/otel/config.yaml"
@@ -94,7 +94,7 @@ data:
           external_labels:
             p8s_logzio_name: sock-shop-otel
         scrape_configs: 
-        - job_name: 'atm'
+        - job_name: 'SPM'
           scrape_interval: 15s
           static_configs:
           - targets: [ "0.0.0.0:8889" ]
@@ -105,7 +105,7 @@ data:
     prometheusremotewrite:
       endpoint: https://listener.logz.io:8053
       headers:
-        Authorization: Bearer ${LOGZIO_METRICS_TOKEN}
+        Authorization: Bearer ${LOGZIO_SPM_METRICS_TOKEN}
     prometheus:
       endpoint: "localhost:8889"
     logging:

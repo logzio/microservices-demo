@@ -6,6 +6,7 @@ do
         l) logs_token=${OPTARG};;
         m) metrics_token=${OPTARG};;
         t) tracing_token=${OPTARG};;
+        s) spm_metrics_token=${OPTARG};;
     esac
 done
 
@@ -31,8 +32,8 @@ echo "Deploying OpenTelemetry tracing"
 kubectl --namespace=monitoring create secret generic logzio-tracing-secret \
   --from-literal=logzio-tracing-shipping-token=$tracing_token 
 
-kubectl --namespace=monitoring create secret generic logzio-metrics-secret \
-  --from-literal=logzio-metrics-shipping-token=$metrics_token 
+kubectl --namespace=monitoring create secret generic logzio-spm-metrics-secret \
+  --from-literal=logzio-spm-metrics-shipping-token=$spm_metrics_token 
 
 kubectl apply -f ../manifests-tracing
 
